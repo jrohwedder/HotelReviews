@@ -270,8 +270,10 @@ public class Main {
                             String content = line.substring(line.indexOf('>') + 1);
                             docReview.add(new TextField("content", content, Field.Store.YES));
                             line = br.readLine();
+
                             while (!line.contains("Overall")) {
                                 line = br.readLine();
+
                             }
                             Integer rating = Integer.parseInt(line.substring(line.indexOf('>') + 1));
                             docReview.add(new IntField("rating", rating, Field.Store.YES));
@@ -280,14 +282,18 @@ public class Main {
                                 Hotel hotel = hotels.getHotel(curHotel);
                                 hotel.addReview(rating);
                             } catch (NullPointerException e) {
-                                System.out.println(hotels.getHotels().size());
-                                e.printStackTrace();
+                                // File did not have the field I use to create hotel object
+                                // So let's give it a generic name
+                                Hotel hotel = new Hotel(curHotel, "Hotel " + curHotel + ": No Name in File");
+                                hotels.addHotel(hotel);
+                                hotel.addReview(rating);
                             }
 
                             //HotelReview review = new HotelReview(content, rating);
                             addDoc(writer, file, docReview);
                             //curReview++;
                         }
+
                     }
                     curHotel++;
 
@@ -324,9 +330,7 @@ public class Main {
     public static void doPagingSearch(BufferedReader in, IndexSearcher searcher, Query query,
                                       int hitsPerPage, boolean raw, boolean interactive) throws IOException {
 
-        // Collect enough docs to show 5 pages
-        // TODO: debug so we can use hotelDatabase.getTotalReviews() in place of "100" to update hotels accurately
-        TopDocs results = searcher.search(query, 100);
+        TopDocs results = searcher.search(query, hotels.getTotalReviews());
         ScoreDoc[] hits = results.scoreDocs;
 
         int numTotalHits = results.totalHits;
