@@ -9,25 +9,39 @@
 
 package lucene.demo.business;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author John
  */
 public class Hotel {
+
+    private int reviews;
+    private int overallSum;
+    private float overallRating;
     
     /** Creates a new instance of Accommodation */
     public Hotel() {
+        overallSum = 0; reviews = 0;
     }
 
     /** Creates a new instance of Accommodation */
-    public Hotel(String id, 
+    public Hotel(int id,
                  String name, 
                  String city, 
                  String description) {
         this.id = id;     
         this.name = name;     
         this.description = description;     
-        this.city = city;     
+        this.city = city;
+        overallSum = 0;
+    }
+
+    public Hotel(int id, String name) {
+        this.id = id;
+        this.name = name;
+        overallSum = 0;
     }
     
     /**
@@ -45,7 +59,7 @@ public class Hotel {
 
     /**
      * Setter for property title.
-     * @param title New value of property title.
+     * @param name New value of property title.
      */
     public void setName(String name) {
         this.name = name;
@@ -54,13 +68,13 @@ public class Hotel {
     /**
      * Holds value of property id.
      */
-    private String id;
+    private int id;
 
     /**
      * Getter for property id.
      * @return Value of property id.
      */
-    public String getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -68,7 +82,7 @@ public class Hotel {
      * Setter for property id.
      * @param id New value of property id.
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -87,7 +101,6 @@ public class Hotel {
 
     /**
      * Setter for property details.
-     * @param details New value of property details.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -119,8 +132,43 @@ public class Hotel {
                + getId()
                +": "
                + getName()
-               +" ("
-               + getCity()
-               +")";
+               +" \t with "
+                + getOverallRating()
+                + " overall rating \t and "
+                + getReviews()
+                + " reviews";
+    }
+
+    public void addReview(int rating) {
+        overallSum += rating;
+        reviews += 1;
+    }
+
+    public void removeReview(int rating) {
+        overallSum -= rating;
+        reviews -=1;
+    }
+
+    public float getOverallRating() {
+        if (reviews > 0)
+            return (float)overallSum/reviews;
+        else
+            return 0;
+    }
+
+//    public int getOverallSum() {
+//        return overallSum;
+//    }
+//
+//    public void setOverallSum(int overallSum) {
+//        this.overallSum = overallSum;
+//    }
+//
+//    public void setReviews(int reviews) {
+//        this.reviews = reviews;
+//    }
+//
+    public int getReviews() {
+        return reviews;
     }
 }
