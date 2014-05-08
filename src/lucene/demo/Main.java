@@ -19,8 +19,6 @@ import lucene.demo.search.FileSearcher;
 public class Main {
 
     private static HotelDatabase hotels;
-    private static int curHotel = 0;
-    private static final int DISPLAY = 10;
     private static String indexPath;
     private static String docsPath;
     private static boolean create;

@@ -41,16 +41,16 @@ public class FileIndexer {
 
     private static String docsPath;
     private static String indexPath;
-    private static boolean create;
+    private static boolean createMode;
     private static HotelDatabase hotels;
     private static int curHotel = 0;
 
 
-    public FileIndexer(String docs, String index, boolean create, HotelDatabase hotels) {
+    public FileIndexer(String docs, String index, boolean create, HotelDatabase hotelsDB) {
         docsPath = docs;
         indexPath = index;
-        this.create = create;
-        this.hotels = hotels;
+        createMode = create;
+        hotels = hotelsDB;
 
     }
 
@@ -70,7 +70,7 @@ public class FileIndexer {
             Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_48);
             IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_48, analyzer);
 
-            if (create) {
+            if (createMode) {
                 // Create a new index in the directory, removing any
                 // previously indexed documents:
                 iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
@@ -143,11 +143,12 @@ public class FileIndexer {
 
                             while (!line.contains("Overall")) {
                                 line = br.readLine();
-
                             }
+
                             Integer rating = Integer.parseInt(line.substring(line.indexOf('>') + 1));
                             docReview.add(new IntField("rating", rating, Field.Store.YES));
                             docReview.add(new IntField("hotelID", curHotel, Field.Store.YES));
+                            
                             try {
                                 Hotel hotel = hotels.getHotel(curHotel);
                                 hotel.addReview(rating);
