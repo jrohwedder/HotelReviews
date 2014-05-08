@@ -33,12 +33,8 @@ public class Main {
     private static HotelDatabase hotels;
     private static int curHotel = 0;
     private static final int DISPLAY = 10;
-    private static String indexPath = "/home/jrohwedder/IdeaProjects/HotelReviews/temp/";
+    private static String indexPath;
 
-    /** Creates a new instance of Main */
-    public Main() {
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -59,7 +55,7 @@ public class Main {
                 + " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
                 + "This indexes the documents in DOCS_PATH, creating a Lucene index"
                 + "in INDEX_PATH that can be searched with SearchFiles";
-        String indexPath = "index";
+        indexPath = "index";
         String docsPath = null;
         boolean create = true;
         for (int i = 0; i < args.length; i++) {
