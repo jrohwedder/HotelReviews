@@ -143,12 +143,11 @@ public class FileIndexer {
 
                             while (!line.contains("Overall")) {
                                 line = br.readLine();
-                            }
 
+                            }
                             Integer rating = Integer.parseInt(line.substring(line.indexOf('>') + 1));
                             docReview.add(new IntField("rating", rating, Field.Store.YES));
                             docReview.add(new IntField("hotelID", curHotel, Field.Store.YES));
-                            
                             try {
                                 Hotel hotel = hotels.getHotel(curHotel);
                                 hotel.addReview(rating);

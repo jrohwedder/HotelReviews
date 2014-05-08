@@ -23,9 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 
 import lucene.demo.business.Hotel;
@@ -109,13 +107,21 @@ public class FileSearcher {
         System.out.println(numTotalHits + " total matching documents");
 
 
-        System.out.println("Before Removal \n");
-        displayTop(DISPLAY);
+//        System.out.println("Before Removal \n");
+//        displayTop(DISPLAY);
+        ArrayList<Hotel> hotelsBeforeRemoval = hotels.getHotels();
+
+        HashMap<Integer, Float> hotelHash = new HashMap<Integer, Float>();
+        for (Hotel hotel : hotelsBeforeRemoval) {
+            hotelHash.put(hotel.getId(), hotel.getOverallRating());
+        }
 
         removeReviews(searcher, query, hits);
-
-        System.out.println("After Removal \n");
+//        System.out.println("After Removal \n");
+        System.out.println("Top 10 Hotelsa");
         displayTop(DISPLAY);
+        System.out.println("Greatest changes \n");
+        displayBiggestChanges(hotelHash, DISPLAY);
 
     }
 
@@ -158,7 +164,59 @@ public class FileSearcher {
         for (int i = 0; i < numToDisplay; i ++) {
             System.out.println((i+1) + ". " + allHotels.get(i));
         }
-        System.out.println("\n\n");
+        System.out.println("");
+    }
+
+    /**
+     * This function will print the top positive changed hotels and the top
+     * negative changed hotels.
+     * @param hotelsOriginal the hotel data before removing some reviews
+     * @param numToDisplay how many of each to print
+     */
+    public void displayBiggestChanges(HashMap<Integer, Float> hotelsOriginal, int numToDisplay) {
+        ArrayList<Hotel> afterRemoval = hotels.getHotels();
+
+        for (Hotel hotel : afterRemoval) {
+            float change = hotel.getOverallRating() - hotelsOriginal.get(hotel.getId());
+            hotel.setChangeAfterRemoval(change);
+        }
+
+        Collections.sort(afterRemoval, new Comparator<Hotel>() {
+            @Override
+            public int compare(Hotel o1, Hotel o2) {
+                return Float.compare(o2.getChangeAfterRemoval(), o1.getChangeAfterRemoval());
+//                if (o1.getChangeAfterRemoval() > o2.getChangeAfterRemoval())
+//                    return -1;
+//                else
+//                    return 1;
+            }
+        });
+
+        System.out.println("Hotels with Highest Positive Change");
+        for (int i = 0; i < numToDisplay; i ++) {
+            System.out.println((i + 1) + ". " + afterRemoval.get(i)
+                    + "\t changed " + afterRemoval.get(i).getChangeAfterRemoval());
+        }
+        System.out.println("");
+
+        Collections.sort(afterRemoval, new Comparator<Hotel>() {
+            @Override
+            public int compare(Hotel o1, Hotel o2) {
+                return Float.compare(o1.getChangeAfterRemoval(), o2.getChangeAfterRemoval());
+//                if (o1.getChangeAfterRemoval() > o2.getChangeAfterRemoval())
+//                    return 1;
+//                else
+//                    return -1;
+            }
+        });
+
+        System.out.println("Hotels with Highest Negative Change");
+        for (int i = 0; i < numToDisplay; i ++) {
+            System.out.println((i+1) + ". " + afterRemoval.get(i)
+                    + "\t changed " + afterRemoval.get(i).getChangeAfterRemoval());
+        }
+        System.out.println("");
+
     }
 }
 

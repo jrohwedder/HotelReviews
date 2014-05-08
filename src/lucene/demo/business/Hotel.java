@@ -20,10 +20,11 @@ public class Hotel {
     private int reviews;
     private int overallSum;
     private float overallRating;
+    private float changeAfterRemoval;
     
     /** Creates a new instance of Accommodation */
     public Hotel() {
-        overallSum = 0; reviews = 0;
+        overallSum = 0; reviews = 0; changeAfterRemoval = 0;
     }
 
     /** Creates a new instance of Accommodation */
@@ -36,12 +37,14 @@ public class Hotel {
         this.description = description;     
         this.city = city;
         overallSum = 0;
+        changeAfterRemoval =0;
     }
 
     public Hotel(int id, String name) {
         this.id = id;
         this.name = name;
         overallSum = 0;
+        changeAfterRemoval = 0;
     }
     
     /**
@@ -170,5 +173,13 @@ public class Hotel {
 //
     public int getReviews() {
         return reviews;
+    }
+
+    public float getChangeAfterRemoval() {
+        return changeAfterRemoval;
+    }
+
+    public void setChangeAfterRemoval(float changeAfterRemoval) {
+        this.changeAfterRemoval = changeAfterRemoval;
     }
 }
